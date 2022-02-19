@@ -1,0 +1,112 @@
+Can we reduce $\dim V^*_2$ further? Consider the following cases: 
+\begin{enumerate}
+    \item $\dim V^*_2=1$. Then the set $\{X^2,Y^2,XY\}$ is linearly dependent and we can add at most one monomial to our set. This implies that there exist non-zero constants $a,b$ such that $aX^2+bY^2=0$. Then $aX^2+bY^2+\sqrt{ab}XY=\sqrt{ab}X\neq0$
+    \item $\dim V^*_2=2$. Let $[A,B]$ denote that matrices $A$ and $B$ are linearly dependent. We have the possibilities $$\{[XY,X^2],Y^2\},\{[XY,Y^2],X^2\},\{[Y^2,X^2],XY\}.$$ Note that $\{[XY,X^2],Y^2\}$ implies there exist non-zero constants $a$ and $b$ such that $aXY+bX^2=0$. Then $X$ cannot be invertible, or we would have $$aX^2=-bXY\implies aX=-bYXX^{-1}\implies aX=-bY,$$ a contradiction to $X$ and $Y$ being linearly independent. A similar argument shows that $Y$ must be non-invertible in the case of $\{[XY,Y^2],X^2\}$. 
+\end{enumerate}
+\section*{Appendix: Code}
+\subsection*{MATLAB CODE}
+\begin{verbatim}
+rng(1)
+dets=rand(1,10000);
+elements=rand(1,100);
+for i=1:100
+for v=1:10000
+    I=[1,0,0,0,1,0,0,0,1];
+    A=round(i*rand(1,9));
+    A2=A.^2;
+    B=round(i*rand(1,9));
+    B2=B.^2;
+    ABmat=reshape(A,3,3)*reshape(B,3,3); 
+    AB=transpose(ABmat(:));
+    A2Bmat=reshape(A2,3,3)*reshape(B,3,3); 
+    A2B=transpose(A2Bmat(:));
+    AB2mat=reshape(A,3,3)*reshape(B2,3,3);
+    AB2=transpose(AB2mat(:));
+    A2B2mat=reshape(A2,3,3)*reshape(B2,3,3); 
+    A2B2=transpose(A2B2mat(:));
+    C=[I;A;A2;B;B2;AB;A2B;AB2;A2B2];
+    if det(C)>0.0001
+        dets(v)=1;
+    else 
+        dets(v)=0;
+    end
+end
+elements(i)=sum(dets)/10000;
+end 
+mean(elements)
+std(elements) 
+
+dets2=rand(1,10000);
+elements2=rand(1,100);
+for i=1:100
+for v=1:10000
+    I=[1,0,0,0,1,0,0,0,1];
+    A=round(i*rand(1,9));
+    A2=A.^2;
+    B=round(i*rand(1,9));
+    B2=B.^2;
+    ABmat=reshape(A,3,3)*reshape(B,3,3); 
+    AB=transpose(ABmat(:));
+    BAmat=reshape(B,3,3)*reshape(A,3,3); 
+    BA=transpose(BAmat(:));
+    A2Bmat=reshape(A2,3,3)*reshape(B,3,3); 
+    A2B=transpose(A2Bmat(:));
+    AB2mat=reshape(A,3,3)*reshape(B2,3,3);
+    AB2=transpose(AB2mat(:));
+    C=[I;A;A2;B;B2;AB;BA;A2B;AB2];
+    if det(C)>0.0001
+        dets2(v)=1;
+    else 
+        dets2(v)=0;
+    end
+end
+elements2(i)=sum(dets2)/10000;
+end 
+mean(elements2)
+std(elements2) 
+\end{verbatim}
+
+At this point, a natural question to ask is how ``often" a pair will generate $M_n$, i.e given a random pair of matrices, what is the probability that they will generate $M_n$? We write a program in MATLAB to address this question in the $n=3$ case as follows:
+\begin{enumerate}
+    \item Create a random pair of $3\times3$ matrices with entries ranging from 0 to $i$. 
+    \item Calculate the matrices $\{I,X,Y,X^2,Y^2,XY,X^2Y,XY^2,X^2Y^2\}$. This is an example of a basis that would satisfy our upper bound of $d(X,Y)=2(3-1)=4$. 
+    \item Calculate the matrices $\{I,X,Y,X^2,Y^2,XY,YX,X^2Y,XY^2\}$. This is an example of a basis that would satisfy our lower bound of $d(X,Y)=\lceil\log_2(3^2+1)-1\rceil=3$. 
+    \item Expand each $3\times3$ matrix of the basis into a vector of length 9, and create a $9\times9$ matrix with each vector as a row. If this matrix has non-zero determinant, then the set is linearly independent. 
+    \item Repeat the process 1,000 times for each $i$, marking if the determinant was non-zero each time. After the 1,000 repetitions, divide the number of non-zero determinants by 1,000 to find the probability that the pair generates $M_3$. We allow $i$, the size of the matrix entries, to range from 1 to $100$. Our final data vector is the 100 probabilities of a random pair with entries from 0 to $i$ will generate $M_3$.
+\end{enumerate}
+We see several interesting things from running this code. First, the mean of the final vector for the upper bound basis is 0.4878 with standard deviation 0.0670, and the mean of the lower bound basis is is 0.4887 with standard deviation 0.0551. Thus the probability of generating $M_3$ given a random matrix is unexpectedly high at 50\%. Also, as we can see from the following plot, after $i=5$ the size of the entries has a negligible effect on the pair's probability of generating $M_3$. 
+\begin{figure}[H]
+\centering
+    \includegraphics[scale=0.5]{plotpic.jpg}
+\end{figure}
+Finally, it is surprising that the values of mean and standard deviation for the two bases are almost identical. We would expect the upper bound basis to produce a higher probability, as it allows for more freedom in our choice of $X,Y$ (for instance, $X$ and $Y$ are not required to be non-commuting). This similarity may be because the bounds for $d(X,Y)$ only differ by 1 in the $n=3$ case. In higher dimensions, where the upper bound for $d(X,Y)$ greatly diverges from the lower, the probability of generating $M_n$ may be much higher when considering the upper bound.  
+
+
+
+
+First, we give an algorithm for creating a basis of $M_n$ from the generating pair: 
+\begin{enumerate}
+    \item For a given $n\geq2$ and pair $X,Y$, begin with the set of monomials in $X,Y$ with degree $d=0$, which is simply $\{I\}$. Increase $d$ by 1 so that we have the monomials $X$ and $Y$, and add them to the set if the new set $\{I,X,Y\}$ is linearly independent.  
+    \item Increase $d$ by 1, list the new monomials and add them one-by-one (in no paticular order) to the set if two conditions are satisfied: the set after the addition is linearly independent and of size less than or equal to $n^2$.  
+    \item Repeat step (2) until the set has $n^2$ elements. Then $d(X,Y)$ is equal to the highest degree of the monomials in the set. 
+\end{enumerate}
+By construction, the set obtained from this algorithm will have $n^2$ linearly independent elements. 
+\begin{example}
+Consider $$X=\begin{pmatrix}2&0\\0&3\end{pmatrix}, Y=\begin{pmatrix}0&1\\1&0\end{pmatrix}.$$ We begin with $\{I\}$ and add $X$ and $Y$ to the set because they are linearly independent. Increasing $d$ by 1 gives us the monomials $$XY,YX,X^2,Y^2.$$ We add $$XY=\begin{pmatrix}0&2\\3&0\end{pmatrix}$$ to the set because the set $\{I,X,Y,XY\}$ is linearly independent. But now the size of our set is $4=2^2$, so we are done. 
+\end{example}
+Finally, the following proposition tells us that the set created in this way will span $M_n$.  
+\begin{proposition}
+Let $\textbf{A}=\{A_1,A_2,\ldots,A_{n^2}\}$ be any set of linearly independent real $n\times n$ matrices. Then $\textbf{A}$ spans $M_n$. 
+\end{proposition}
+\begin{proof}
+Suppose for contradiction that $\textbf{A}$ does not span $M_n$. Then there exists at least one matrix $B_1\in M_n$ that is not in the span of $\textbf{A}$. Since $B_1$ is not a linear combination of elements of $\textbf{A}$, the set $$\textbf{A}_1=\{A_1,A_2,\ldots,A_{n^2},B_1\}$$ is linearly independent. If $\textbf{A}_1$ still does not span $M_n$, we continue to add matrices $B_i\in M_n, B_i\notin$Span$(\textbf{A}_i)$ until all matrices of $M_n$ are in the span of the set $\textbf{A}_k$ for some $k>0$. We have that $\textbf{A}_k$ is linearly independent because we only added matrices that were not in the span of the previous matrices, and $\textbf{A}_k$ spans $M_n$. Therefore $\textbf{A}_k$ is a basis for $M_n$. But then $\textbf{A}_k$ has $n^2+k\neq n^2$ elements, which is a contradiction to the definition of dimension for a vector space. Thus our original assumption that $\textbf{A}$ does not span $M_n$ is false. 
+\end{proof}
+Now that we have a well-defined way of creating a basis for $M_n$, we can begin our discussion of the ``worst" and ``best" case scenarios that would produce the upper and lower bounds for $d(X,Y)$ respectively. 
+
+We define $V^*_i$ as the subspace of $V_i$ generated by monomials in $X,Y$ of degree equal to $i$. Maximizing $d(X,Y)$ for the ``worst" case corresponds to minimizing $\dim V^*_i$ for every $i$, as this gives us fewer choices to add to the set. In other words, the number of monomials of degree $i$ that can be added to the set is less than or equal to $\dim V^*_i$. Therefore a smaller $\dim V^*_i$ forces us to increase the degree of the monomials in order to meet the $n^2$ size requirement of the basis. 
+\begin{example}
+We have the linearly independent set $\{I,X,Y\}$ of $3\times3$ matrices. This set is smaller than the required size $3^2=9$ basis, so we must add degree 2 monomials to the set. The possible degree 2 monomials are $$\{X^2,Y^2,XY,YX\}.$$ Assume we are able to add all four to our set, so $\dim V^*_2=4$. The size of the set is now $7<9$, so we must increase the degree to 3 and choose from the possible monomials, $$\{X^3,Y^3,X^2Y,XYX,YX^2,Y^2,YXY,XY^2\}.$$ If $\dim V^*_3>2$, then we may be able to add two monomials to the set depending on those monomials' dependencies with matrices already in the set. If so, then we are finished with $d(X,Y)=3$. But if $\dim V^*_3=1$, then we can add at most one monomial to the set, so the degree must be increased to 4 because the size of the set is still less than 9. In this case, $d(X,Y)>3$.  
+\end{example}
+$\dim V^*_i$ is clearly minimized (equal to 1 for all $i$) if $X$ and $Y$ are linearly dependent. Then $M_n$ would be generated by a single matrix, say $X$, and the set $$\{I,X,X^2,\ldots,X^{n^2-1}\}$$ is a basis for $M_n$. This gives us $d(X,Y)=n^2-1$, but the following proposition tells us that this situation is not possible. 
+
+

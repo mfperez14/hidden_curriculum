@@ -1,0 +1,246 @@
+\documentclass[11pt]{amsart}
+\usepackage[utf8]{inputenc}
+\usepackage{fullpage}
+\usepackage{floatrow}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{verbatim}
+\usepackage{enumerate}
+\usepackage{hyperref}
+\usepackage{dsfont}
+\usepackage{mathtools}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage[margin=1in]{geometry} 
+
+%\renewcommand{\slimits@}{\limits}
+%\renewcommand{\nmlimits@}{\limits}
+
+\newcommand{\RN}{\mathbb{R}^n}
+\newcommand{\Cx}{\mathbb{C}}
+\newcommand{\Sp}{\mathbb{S}}
+
+\newcommand{\zbar}{\overline{z}}
+\newcommand{\C}{\mathbb{C}}
+\DeclareMathOperator{\im}{Im}
+\DeclareMathOperator{\re}{Re}
+\newcommand{\pd}[2]{\frac{\partial #1}{\partial #2}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\var}{\text{Var}}
+\newcommand{\Mod}[1]{\ (\mathrm{mod}\ #1)}
+\newcommand{\cov}{\text{Cov}}
+\newcommand{\G}{\mathcal{G}}
+\newcommand{\Lbar}[1]{\overline{L_{#1}}}
+\newcommand{\boxb}{\square_b}
+\newcommand{\LB}{\Delta_{\Sp^{2n-1}}}
+\newcommand{\hpq}{\mathcal{H}_{p,q}(\Sp^{2n-1})}
+
+\usepackage{graphicx}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{remark}{Remark}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\numberwithin{equation}{section}
+\numberwithin{figure}{section}
+\numberwithin{theorem}{section}
+\newtheorem{example}{Example}
+\newtheorem*{theorem*}{Theorem}
+\newtheorem*{definition*}{Definition}
+\newcommand{\Var}{\textnormal{Var}}
+
+\setlength{\intextsep}{10pt minus 10pt}
+\title[title]{Generating Matrices}
+\author{Sami Kaya, Manuel Perez, Tommie Reerink}
+\begin{document}
+\maketitle
+\begin{abstract}
+A pair of matrices $X$ and $Y$ generate the space of real $n\times n$ matrices $M_n$ if $M_n$ is spanned by  monomials in $X$ and $Y$. The efficiency of the generating pair can be measured by the smallest degree $d(X,Y)=d$ such that the monomials of degree $\leq d$ span $M_n$. In this paper we find a lower bound for $d$ and show some cases where $d$ is infinite. 
+\end{abstract}
+\section{Introduction}
+Let $M_n$ denote the $n^2$-dimensional space of real $n\times n$ matrices. We say that a pair of $n\times n$ matrices $X,Y$ \textit{generate} $M_n$ if monomials in $X,Y$ span $M_n$. For example, if $$X=\begin{pmatrix}2&0\\0&3\end{pmatrix}, Y=\begin{pmatrix}0&1\\1&0\end{pmatrix},$$ then the four matrices $\{I,X,Y,XY\}$ span $M_3$, so $X$ and $Y$ generate $M_3$. The set is also linearly independent. 
+
+We are interested in how efficiently we can generate $M_n$. To measure efficiency, we use the \textit{degree} of a generating pair, the smallest integer $d(X,Y)=d$ such that the monomials of degree $\leq d$ span $M_n$. If monomials in $X,Y$ never span $M_n$, then $d(X,Y)$ is infinite. In this paper we address the following questions surrounding $d(X,Y)$: 
+\begin{enumerate}
+    \item Is $d(X,Y)$ always finite? If not, what are some $X,Y$ that would yield an infinite $d(X,Y)$?
+    \item If $X$ and $Y$ span $M_n$, is there a lower bound $\delta_n$ dependent on $n$ such that $d(X,Y)\geq\delta_n$?
+\end{enumerate}
+Further, we define the \textit{growth function} on the positive integers by $$g(i)=\dim V_i-\dim V_{i-1},$$ where $V_i$ a subspace of $M_n$ for some $n$ spanned by monomials in $X,Y$ of degree $\leq i$. The growth function depends on $X$ and $Y$ In this paper we find an upper bound for $g(i)$. 
+
+Our main results are stated below: 
+\begin{theorem}
+If $X$ and $Y$ are linearly dependent or commute, then $d(X,Y)$ is infinite. 
+\end{theorem}
+\begin{theorem}
+If $n\times n$ matrices $X$ and $Y$ span $M_n$, then $\log_2(n^2+1)-1\leq d(X,Y)$. 
+\end{theorem}
+
+The organization of this paper is as follows: First, in Section 2 we consider when $d(X,Y)$ may not be finite and prove Theorem 1.1. Then in Section 3, we assume that $d(X,Y)$ is finite, i.e $X$ and $Y$ span $M_n$, and prove Theorem 1.2. 
+\section{Infinite $d(X,Y)$}
+In this section find some properties of $X,Y$ that guarantee an infinite $d(X,Y)$. First, we give an algorithm for creating a basis of $M_n$ from the generating pair: 
+\begin{enumerate}
+    \item For a given $n\geq2$ and pair $X,Y$, begin with the set of monomials in $X,Y$ with degree $d=0$, which is simply $\{I\}$. Increase $d$ by 1 so that we have the monomials $X$ and $Y$, and add them to the set if the new set $\{I,X,Y\}$ is linearly independent.  
+    \item Increase $d$ by 1, list the new monomials and add them one-by-one (in no paticular order) to the set if two conditions are satisfied: the set after the addition is linearly independent and of size less than or equal to $n^2$.  
+    \item Repeat step (2) until the set has $n^2$ elements. Then $d(X,Y)$ is equal to the highest degree of the monomials in the set. 
+\end{enumerate}
+By construction, the set obtained from this algorithm will have $n^2$ linearly independent elements. 
+\begin{example}
+Consider $$X=\begin{pmatrix}2&0\\0&3\end{pmatrix}, Y=\begin{pmatrix}0&1\\1&0\end{pmatrix}.$$ We begin with $\{I\}$ and add $X$ and $Y$ to the set because they are linearly independent. Increasing $d$ by 1 gives us the monomials $$XY,YX,X^2,Y^2.$$ We add $$XY=\begin{pmatrix}0&2\\3&0\end{pmatrix}$$ to the set because the set $\{I,X,Y,XY\}$ is linearly independent. But now the size of our set is $4=2^2$, so we are done. 
+\end{example}
+Finally, the following proposition tells us that the set created in this way will span $M_n$.  
+\begin{proposition}
+Let $\textbf{A}=\{A_1,A_2,\ldots,A_{n^2}\}$ be any set of linearly independent real $n\times n$ matrices. Then $\textbf{A}$ spans $M_n$. 
+\end{proposition}
+\begin{proof}
+Suppose for contradiction that $\textbf{A}$ does not span $M_n$. Then there exists at least one matrix $B_1\in M_n$ that is not in the span of $\textbf{A}$. Since $B_1$ is not a linear combination of elements of $\textbf{A}$, the set $$\textbf{A}_1=\{A_1,A_2,\ldots,A_{n^2},B_1\}$$ is linearly independent. If $\textbf{A}_1$ still does not span $M_n$, we continue to add matrices $B_i\in M_n, B_i\notin$Span$(\textbf{A}_i)$ until all matrices of $M_n$ are in the span of the set $\textbf{A}_k$ for some $k>0$. We have that $\textbf{A}_k$ is linearly independent because we only added matrices that were not in the span of the previous matrices, and $\textbf{A}_k$ spans $M_n$. Therefore $\textbf{A}_k$ is a basis for $M_n$. But then $\textbf{A}_k$ has $n^2+k\neq n^2$ elements, which is a contradiction to the definition of dimension for a vector space. Thus our original assumption that $\textbf{A}$ does not span $M_n$ is false. 
+\end{proof}
+Now that we have a well-defined way of creating a basis for $M_n$, we can begin our discussion of the ``worst" and ``best" case scenarios that would produce the upper and lower bounds for $d(X,Y)$ respectively. 
+
+We define $V^*_i$ as the subspace of $V_i$ generated by monomials in $X,Y$ of degree equal to $i$. Maximizing $d(X,Y)$ for the ``worst" case corresponds to minimizing $\dim V^*_i$ for every $i$, as this gives us fewer choices to add to the set. In other words, the number of monomials of degree $i$ that can be added to the set is less than or equal to $\dim V^*_i$. Therefore a smaller $\dim V^*_i$ forces us to increase the degree of the monomials in order to meet the $n^2$ size requirement of the basis. 
+\begin{example}
+We have the linearly independent set $\{I,X,Y\}$ of $3\times3$ matrices. This set is smaller than the required size $3^2=9$ basis, so we must add degree 2 monomials to the set. The possible degree 2 monomials are $$\{X^2,Y^2,XY,YX\}.$$ Assume we are able to add all four to our set, so $\dim V^*_2=4$. The size of the set is now $7<9$, so we must increase the degree to 3 and choose from the possible monomials, $$\{X^3,Y^3,X^2Y,XYX,YX^2,Y^2,YXY,XY^2\}.$$ If $\dim V^*_3>2$, then we may be able to add two monomials to the set depending on those monomials' dependencies with matrices already in the set. If so, then we are finished with $d(X,Y)=3$. But if $\dim V^*_3=1$, then we can add at most one monomial to the set, so the degree must be increased to 4 because the size of the set is still less than 9. In this case, $d(X,Y)>3$.  
+\end{example}
+$\dim V^*_i$ is clearly minimized (equal to 1 for all $i$) if $X$ and $Y$ are linearly dependent. Then $M_n$ would be generated by a single matrix, say $X$, and the set $$\{I,X,X^2,\ldots,X^{n^2-1}\}$$ is a basis for $M_n$. This gives us $d(X,Y)=n^2-1$, but the following proposition tells us that this situation is not possible. 
+\begin{proposition}
+$M_n$ cannot be generated by a single matrix. 
+\end{proposition}
+\begin{proof}
+We will use the Cayley-Hamilton theorem to show that a single $n\times n$ matrix $X$ can generate at most an $n$ dimensional proper subspace of $M_n$. The Cayley-Hamilton theorem states that a matrix satisfies its own characteristic polynomial, $p(\lambda)=\det(\lambda I-X)$, and $$X^k+c_{k-1}X^{k-1}+\ldots+c_1X+c_0I=0$$ if $k$ is the degree of $p(\lambda)$. This means that powers of $X$ that are greater or equal to $k$ can be written as a linear combination of lower powers. However when expanding the characteristic function, a term of $\lambda$ is gained for each diagonal entry of $\lambda I-X$, so calculation of $p(\lambda)=\det(\lambda I-X)$ yields a polynomial of degree $k= n$. This means that the largest linearly independent set we can have in powers of $X$ is $\{I,X,X^2,\ldots,X^{n-1}\}$. Therefore $X$ cannot generate the $n^2$ dimensional space $M_n$.  
+\end{proof}
+Proposition 2.2 shows that a single matrix may generate at most an $n$ dimensional space, but this space may in fact be smaller. 
+\begin{example}
+Let $$X=\begin{pmatrix}0&0&1\\0&0&1\\0&0&1\end{pmatrix}.$$ Then since $$X^2=\begin{pmatrix}0&0&1\\0&0&1\\0&0&1\end{pmatrix}=X$$ we have that the largest space generated by $X$ is $2<3=n$ dimensional, with $\{I,X\}$ as a basis. 
+\end{example}
+We provide one way to choose $X$ and $Y$ such that they satisfy the upper bound of $n-1$ linearly independent powers with the following proposition. 
+\begin{proposition}
+If the $n\times n$ matrix $X$ has $n$ distinct eigenvalues, then the set $\{I,X,X^2,\ldots, X^{n-1}\}$ is linearly independent. 
+\end{proposition}
+\begin{proof}
+Recall that $X$ satisfying its degree $n$ characteristic polynomial $p(\lambda)$ implies that $$\{I,X,X^2,\ldots,X^{n-1}\}$$ is the maximal linearly independent set generated by $X$. However Example 3 showed that there may be a $k\leq n$ such that the linearly independent powers reach only up to $k$. In that case we would have that $X$ satisfies a polynomial of smaller degree as well. Let $p^*(\lambda)$ be this degree $k\leq n$ polynomial such that $k$ is the smallest natural number with $p^*(X)=0$. We will first show that the set $$\{I,X,X^2,\ldots,X^{k-1}\}$$ is linearly independent. Suppose that $$X^{k-1}+c_{k-1}X^{k-1}+\ldots+c_1X+c_0I=0.$$ Then by by defining $$q(\lambda)=\lambda^{k-1}+c_{k-1}\lambda^{k-1}+\ldots+c_1\lambda+c_0I$$ we have created a polynomial with $q(X)=0$ and degree $k-1<k$, which contradicts the definition of $p^*(\lambda)$ unless $q(\lambda)$ is identically 0. Thus $$c_{k-1}=c_{k-2}=\ldots=c_0$$ and the set $\{I,X,X^2,\ldots,X^{k-1}\}$ is linearly independent. 
+
+Now we show that $k=n$ when $X$ has $n$ distinct eigenvalues. By definition, the eigenvalues of $X$ are roots of the characteristic polynomial. If the $n$ eigenvalues are distinct, these roots each have multiplicity 1. Then if every root of $p(\lambda)$ is also a root of $p^*(\lambda)$, the degree of $p^*(\lambda)$ will be equal to the degree of $p(\lambda)$. Thus to show that the degree of $p^*(\lambda)$ is $n$, it suffices to prove that every root of $p(\lambda)$ is a root of $p^*(\lambda)$ because then $p^*(\lambda)$ will have exactly $n$ roots (cannot exceed $n$ because $k\leq n$). 
+
+If $\gamma$ is a root of $p(\lambda)$, $\gamma$ is an eigenvalue of $X$ with eigenvector $v$, and we have 
+\begin{equation*}
+    \begin{split}
+      p^*(X)v&=X^{k-1}v+c_{k-1}X^{k-1}v+\ldots+c_1Xv+c_0v \\
+      &=\gamma X^{k-2}v+\gamma c_{k-1}X^{k-3}v+\ldots+\gamma c_1v+c_0v\\
+      &=\gamma^{k-1}v+c_{k-1}\gamma^{k-1}v+\ldots+c_1\gammav+c_0v\\
+      &=p^*(\gamma)v.
+    \end{split}
+\end{equation*}
+Since $v\neq0$,  $$p^*(X)v=0\cdot v=0=p^*(\gamma)v$$ shows that $p^*(\gamma)=0$ and we are done.  
+\end{proof}
+Despite being able to reach the $n-1$ powers bound, we see from Proposition 2.2 that the generating pair itself must be linearly independent. However, a simple way to reduce the number of linearly independent monomials of a given degree is to require that $X$ and $Y$ commute. In section 3, we discuss in greater detail a possible bound for $d(X,Y)$ that is achieved for commuting matrices. 
+
+What about the generating pair of the ``best" case scenario? In this case $d(X,Y)$ is minimized when we maximize $\dim V^*_i$. Clearly $X$ and $Y$ must be non-commuting. We show how this property relates to linear independence with the following proposition. 
+\begin{proposition}
+If [X,Y]=0, X and Y can't generate the space of real $n \prod n$ matrices.
+\end{proposition}
+\begin{proof}
+Since if X and Y commute they are simultaneously diagonalizable which mean implies there exists   an inverible matrix $P$ such that 
+
+$$X=P^{-1}D_x P$$
+$$Y=P^{-1}D_y P$$
+
+where $D_x$ and $D_y$ are two diagonal matrices. Let $P(X,Y)$ be a polynomial with powers of $X,Y$. It follows that any such  matrix $P(X,Y)$ can be written as 
+
+$$P(X,Y)=P^{-1}D_{P}P$$
+with a diagonal matrix $D_P$. Therefore it follows that the space of all matrices that can be generated by matrices X,Y is spanned by the following n matrices with m=1,...,n
+
+$$M_m=P^{-1}D_n P$$
+
+
+where $D_n$ is the $n \prod n$ diagonal matrix with only nonzero entry in the $m$th row and column. Thus this space is $n$ dimensional and can't be spanning the $n \prod n$ dimensional space. 
+
+
+\end{proof}
+\begin{proposition}
+If matrices X and Y do not commute, then the set \{I,X,Y,XY\} is linearly independent. 
+\end{proposition}
+\begin{proof}
+ Let X,Y be two non-commuting matrices. If the set \{I,X,Y,XY\} are not linearly independent then we can write 
+ $XY=aX+bY+cI$ for some $a,b,c\in \mathbb{R}$. Let $\Vec{n}$ be an eigenvector of Y with eigenvalue n so that we have 
+ $Y \Vec{n}= n \Vec{n}$
+ 
+ Then have
+ 
+ $$XY \Vec{n} = (aX+bY+cI)\Vec{n} $$
+ $$nX\Vec{n}=anX\Vec{n} +(bn+c)\Vec{n}$$
+ $$X\Vec{n}= \frac{bn+c}{n-a} \Vec{n}$$
+ which implies that $X,Y$ have the same eigenvalues which contradicts them being non-commuting matrices. 
+\end{proof}
+We have from this proposition that $\{I,X,Y,XY\}$ or $\{I,X,Y,YX\}$ is linearly independent, but the question of the linear independence of the full set $\{I,X,Y,XY,YX\}$ is more subtle, as we see with the next proposition. 
+\begin{proposition}
+If matrices X and Y do not commute this does not imply the set \{I,X,Y,XY,YX\} is linearly independent. 
+\end{proposition}
+\begin{proof}
+We prove by counterexample. Let $X,Y$ be $\sigma_x, \sigma_z$ Pauli matrices defined as 
+$$X=\sigma_x=\begin{pmatrix}0&1\\1&0\end{pmatrix}$$, $$Y=\sigma_z=\begin{pmatrix}1&0\\0&-1\end{pmatrix}$$.
+$$\sigma_y=\begin{pmatrix}0&-i\\i&0\end{pmatrix}$$
+This two matrices don't commute and have the following commutation relation
+
+$$[X,Y]=[\sigma_x,\sigma_z]=-2i \sigma_y=\begin{pmatrix}0&-2\\2&0\end{pmatrix}\neq 0. $$
+Furthermore X,Y anticommute. In other words
+$$\{X,Y\}=XY+YX=0$$
+which implies that $XY$ is not linearly independent of $YX$.
+ 
+\end{proof}
+Despite this, in Section 3 we will assume that all possible non-commuting combinations of monomials of degree $i$ are linearly independent for every $i$, which will give us an upper bound for $\dim V^*_i$. 
+\section{Bounds for $g(i)$ and $d(X,Y)$}
+In this section we find bounds for $g(i)$ and $d(X,Y)$. From Section 2 we know that the dimension of $V_i$ has a direct effect on $d(X,Y)$ as well as $g(i)$. Therefore we first bound $\dim V_i$. If we choose $X,Y$ such that all possible monomials in $X,Y$ of degree less than or equal to $i$ are linearly independent, we obtain an upper bound for the number of basis elements of $V_i$, and by extension for $\dim V_i$. For example, $\dim V_2\leq7$ because the basis $\{I,X,Y,XY,YX,X^2,Y^2\}$ of size 7 consists of all possible monomials in $X,Y$ of degree less than or equal to 2. We use this argument to find an upper bound for $\dim V_i$ in the following lemma. 
+\begin{lemma}
+$\dim V_i\leq2^{i+1}-1$. 
+\end{lemma}
+\begin{proof}
+We prove the upper bound by showing that the number of possible monomials in $X,Y$ of degree less than or equal to $i$ is equal to $\sum_{k=0}^i2^k$. First, we prove that the largest number of $X,Y$ monomials with degree $k$ is $\dim V^*_k=2^k$ by induction on $k$. If $k=0$ we have only the identity matrix and $\dim V^*_1=1=2^0$. If $k=1$, the set becomes $\{X,Y\}$ and $\dim V^*_2=2=2^1$ as desired. Thus the base cases of $k=0,1$ have been proved. 
+
+Now for the inductive hypothesis, assume $\dim V^*_m=2^m$. We make strings of length $m$ for each term by writing the term in its expanded form. For example, $$X^3YX\mapsto XXXYX$$ if $m=5$. Each string has $m$ characters and there are two choices ($X$ or $Y$) for each character, so we have that the possible number of strings is $2^m$ as expected. Increasing the degree of the monomials by 1 corresponds to distributing $X$ and $Y$ to all degree $m$ terms; in our string representation, this is appending an additional character to the beginning of each string. There are two choices for this additional character and $2^m$ strings, so the number of strings now is $2^m2=2^{m+1}$. Thus $\dim V^*_{m+1}=2^{m+1}$.
+
+Since $\dim V^*_k=2^k$, we have that the size of the set of monomials in $X,Y$ of degree less than or equal to $i$ is given by $\sum_{k=0}^i\dim V^*_k=\sum_{k=0}^i2^k.$ It is a well known fact that $\sum_{k=0}^i2^k=2^{i+1}-1$, so we have the upper bound for $\dim V_i$. 
+\end{proof}
+An upper bound for the growth function follows directly from Lemma 3.1. 
+\begin{theorem}
+$g(i)\leq 2^i$.
+\end{theorem}
+\begin{proof}
+From Lemma 3.1, we know that increasing the degree from $i-1$ to $i$ adds at most $2^i$ monomials to the basis. Therefore that the growth rate of $g(i)$ is bounded by $2^i$.
+\end{proof}
+As for $d(X,Y)$, recall from Section 2 that minimizing $d(X,Y)$ corresponds to maximizing $\dim V^*_i$ for each $i$, which is analogous to maximizing $\dim V_i$. Therefore it is not surprising that the lower bound for $d(X,Y)$ follows almost immediately from Lemma 3.1. The upper bound is more subtle and uses Proposition 2.2 in Section 2. 
+\begin{theorem}
+$\log_2(n^2+1)-1\leq d(X,Y)\leq 2(n-1)$. 
+\end{theorem}
+\begin{proof}
+The lower bound follows directly from Lemma 3.1 in the case that the subset $V_i$ is $M_n$ itself. Then we have $$n^2=\dim M_n=\dim V_i\leq 2^{i+1}-1,$$ and algebraic rearrangement yields $$d(X,Y)=i\geq\log_2(n^2+1)-1.$$ 
+
+For the upper bound, in Section 2 we noted that a way to reduce $\dim V^*_i$ is by requiring $X$ and $Y$ to commute. Then a possible basis of $V^*_i$ is $$X^i,X^{i-1}Y,X^{i-2}Y^2,\ldots,XY^{i-1},Y^i.$$ Proposition 2.2 showed that the largest linearly independent set generated by a single matrix is comprised of powers up to $n-1$. This holds for powers of $X$ and $Y$ in matrix products as well. For instance, we cannot add a monomial $X^nY^k,k\leq n-1$ to the basis because $X^n$ is a linear combination of lower powers of $X$, so we would have $$(c_{n-1}X^{n-1}+\cdots+c_0I)Y^k=c_{n-1}X^{n-1}Y^k+\cdots+c_0I$$ which is a linear combination of elements already in the set by construction. Then the powers of $X,Y$ products cannot exceed that of $X^{n-1}Y^{n-1}$ and be linearly independent when added to the set. Thus $d(X,Y)$ is bounded above by $2(n-1)$. 
+\end{proof}
+
+Given these bounds, in the next section we provide some examples of explicit calculations for $d(X,Y)$ for special matrices. 
+
+\section{$d(X,Y)$ and $g(i)$ for select matrices}
+Recall that we have the bounds $$\log_2(n^2+1)-1\leq d(X,Y)\leq 2(n-1).$$ In this section we calculate the $d(X,Y)$ of some generating pairs. 
+\begin{example}
+ An $n\times n$ cyclic shift matrix and a matrix with distinct diagonal entries has $d(X,Y)=n$. 
+\end{example}
+Using the powers of cyclic shift matrix,X, we can separate the $n\times n$ space into n vectors of n entries  since matrices with different powers of X are linearly independent of each other. The order of the  matrices determine the order of entries of vector with n entries. For example for some $n \times n$ diagonal matrix $$Y=\begin{pmatrix}a_1&0&0&...\\0&a_2&0&...\\0&0&a_3&...\end{pmatrix}$$
+for some $k, X^k Y$ corresponds to the vector with entries $a_1,a_2,...,a_{n}$ for that subspace where $X^{k-1}YX $ corresponds to $a_{n},a_1,...,a_{n-1}$.
+So if we choose the diagonal matrix st all cyclic combinations of the vector $a_1,a_2,...,a_{n}$ form a linearly independent set, we can have the following spanning of the $n \times n$ space with 
+
+$I,Y,Y^2,...Y^n, X, XY, XY^{n-1}, YX,..., ...., X^{n-1}, X^{n-1}Y, X^{n-2}YX,..., YX^{n-1} $
+which is spanning of degree $n$.
+
+Given this example and the discussions in Section 2, a follow-up question is whether we can find a linearly independent pair that will never generate $M_n$ no matter how large we make $d(X,Y)$. We find such a pair of $3\times3$ matrices in the following example. 
+\begin{example}
+Let $$X=\frac{1}{3}\begin{pmatrix}2&1&2\\-2&2&1\\1&2&-2\end{pmatrix}$$ be a $3\times 3$ orthogonal matrix and $$Y=\frac{1}{3}\begin{pmatrix}2&-2&1\\1&2&2\\2&1&-2\end{pmatrix}$$ its transpose. Then the pair $X,Y$ cannot generate $M_3$. 
+\end{example}
+It is easy to check that $I,X,Y$ is linearly independent. Now, by putting $X$ and $Y$ into reduced row echelon form $$X=\frac{1}{3}\begin{pmatrix}2&1&2\\0&3&3\\0&0&-9/2\end{pmatrix}, Y=\frac{1}{3}\begin{pmatrix}2&-2&1\\0&3&3/2\\0&0&-9/2\end{pmatrix}$$ we see that $X$ and $Y$ each have three distinct eigenvalues. Then by Proposition 2.3, $\{I,X,X^2\}$ and $\{I,Y,Y^2\}$ are each linearly independent sets. Given that $$X^2=\frac{1}{9}\begin{pmatrix}4&8&1\\-7&4&-4\\-4&1&8\end{pmatrix}, Y^2=\frac{1}{9}\begin{pmatrix}4&-7&-4\\8&4&1\\1&-4&8\end{pmatrix}$$ we can verify that the set $\{I,X,Y,X^2,Y^2\}$ is linearly independent as before. This set has five elements, which is still under the size requirement of $3^2=9$. Therefore, monomials that are products of $XY$ are needed. However, $X$ and $Y$ commute with $XY=YX=I$. This means that all $XY$ product monomials are linearly dependent with elements of the set $\{I,X,Y,X^2,Y^2\}$. For example, $$X^2YXY^2X^2=XIIIX=X^2.$$ Thus no matter how high we increase the degree of the monomials, we will never be able to create a basis for $M_3$, so $d(X,Y)$ does not exist. 
+
+\section*{Acknowledgements}
+We would like to thank the 18.821 course staff, particularly Susan Ruff and Yibo Gao for feedback and suggestions. Manuel is currently working on calculating $d(X,Y)$ for matrix pairs using python code. Sami wrote the second half of Section 2 (Proposition 2.4 to end), Example 4, and came up with the idea for checking linear dependence in MATLAB (step 4 in the algorithm). Tommie wrote the introduction, the first half of Section 2 (the beginning up to and including Proposition 2.3), Section 3, Example 5, and the MATLAB code and discussion in Section 4.  
+
+\end{document}
+
