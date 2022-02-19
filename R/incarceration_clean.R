@@ -4,37 +4,36 @@ library(dplyr)
 library(here)
 
 # import raw dataset
-read_csv(here("data/incarceration.csv")) %>%
+incarceration = read_csv(here("data/incarceration.csv"))
   
-  # refused responses or already incarcerated --> NA
-  # starts_with("E") are the columns that hold number of arrests per month of 2002
-  mutate(across(starts_with("E"), ~case_when(
-    .x < 0   ~ NA_real_,
-    .x == 99 ~ NA_real_,
-    TRUE     ~ .x
-  ))) %>%
-  
-  # if you had NAs for the entire year, remove you
-  filter(if_any(starts_with("E"), ~!is.na(.x))) %>%
-  
-  # sum across the months using rowwise
-  rowwise() %>%
-  mutate(total_arrests = sum(c_across(starts_with("E")), na.rm = TRUE)) %>%
-  ungroup() %>%
-  
-  # recode the gender variable
-  mutate(gender = if_else(R0536300 == 1, "Male", "Female")) %>%
-  
-  # recode the race variable
-  mutate(race = case_when(
-    R1482600 == 1 ~ "Black",
-    R1482600 == 2 ~ "Hispanic",
-    R1482600 == 3 ~ "Mixed Race (Non-Hispanic)",
-    R1482600 == 4 ~ "Non-Black / Non-Hispanic",
-  )) %>%
-  
-  # finally, select the variables that will be used in the analysis
-  select(race, gender, total_arrests) %>%
-  
-  # write to a csv
-  write_csv(here("data/incarceration_clean.csv"))
+# identify and assign NA values
+incarceration = mutate(incarceration, across(starts_with("E"), ~case_when(
+  .x < 0   ~ NA_real_,
+  .x == 99 ~ NA_real_,
+  TRUE     ~ .x
+)))
+
+# filter observations with NA values across the entire year
+incarceration = filter(incarceration, if_any(starts_with("E"), ~!is.na(.x)))
+
+# sum across months with rowwise
+incarceration = rowwise(incarceration)
+incarceration = mutate(incarceration, total_arrests = sum(c_across(starts_with("E")), na.rm = TRUE))
+incarceration = ungroup(incarceration)
+
+# recode gender variable
+incarceration = mutate(incarceration, gender = if_else(R0536300 == 1, "Male", "Female"))
+
+# recode race variable
+incarceration = mutate(incarceration, race = case_when(
+  R1482600 == 1 ~ "Black",
+  R1482600 == 2 ~ "Hispanic",
+  R1482600 == 3 ~ "Mixed Race (Non-Hispanic)",
+  R1482600 == 4 ~ "Non-Black / Non-Hispanic",
+))
+
+# keep only relevant variables
+incarceration_clean = select(incarceration, race, gender, total_arrests)
+
+# export clean data as a csv file
+write.csv(incarceration_clean, here("data/incarceration_clean.csv"))
