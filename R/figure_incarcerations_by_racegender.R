@@ -7,7 +7,7 @@ library(ggthemes)
 # create bar graph of months incarcerations by race and gender using clean dataset
 read_csv(here("data/incarceration_clean.csv")) %>%
   group_by(race, gender) %>%
-  summarize(total_arrests = mean(total_months_icarcerated)) %>%
+  summarize(total_arrests = mean(total_months_incarcerated)) %>%
   ggplot(aes(race, total_arrests, fill = gender)) +
   geom_bar(stat = "identity", position = "dodge") +
   labs(
