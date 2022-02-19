@@ -18,7 +18,7 @@ incarceration = filter(incarceration, if_any(starts_with("E"), ~!is.na(.x)))
 
 # sum across months with rowwise
 incarceration = rowwise(incarceration)
-incarceration = mutate(incarceration, total_arrests = sum(c_across(starts_with("E")), na.rm = TRUE))
+incarceration = mutate(incarceration, total_months_incarcerated = sum(c_across(starts_with("E")), na.rm = TRUE))
 incarceration = ungroup(incarceration)
 
 # recode gender variable
@@ -33,7 +33,7 @@ incarceration = mutate(incarceration, race = case_when(
 ))
 
 # keep only relevant variables
-incarceration_clean = select(incarceration, race, gender, total_arrests)
+incarceration_clean = select(incarceration, race, gender, total_months_incarcerated)
 
 # export clean data as a csv file
 write.csv(incarceration_clean, here("data/incarceration_clean.csv"))
